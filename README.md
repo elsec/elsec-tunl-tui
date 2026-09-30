@@ -16,6 +16,14 @@ members of the `elsec-tunl` group run only that helper as root without a passwor
 only accepts tunnel names that exist in `/etc/wireguard` and strips private/preshared keys from
 status output.
 
+## Uninstalling
+
+```sh
+sudo ./uninstall.sh
+```
+
+Removes the binary, helper, sudoers rule and `elsec-tunl` group. Tunnels that are up stay up.
+
 ## Running without installing
 
 Set `TUNL_HELPER` to use the helper from the repo, running as root:
