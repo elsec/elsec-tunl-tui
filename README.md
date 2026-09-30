@@ -5,13 +5,13 @@ A minimal TUI for bringing `wg-quick` tunnels up/down and viewing their status.
 ## Setup
 
 ```sh
-sudo ./install.sh         # creates `elsec-tunl` group, installs helper + sudoers rule
+cargo build --release     # as your user, not root
+sudo ./install.sh         # installs tunl-tui + helper, creates `elsec-tunl` group and sudoers rule
 newgrp elsec-tunl         # or log out/in
-cargo build --release
-./target/release/tunl-tui
+tunl-tui
 ```
 
-`install.sh` installs `/usr/local/bin/tunl-helper` and `/etc/sudoers.d/tunl-tui`, which lets
+`install.sh` installs `/usr/local/bin/tunl-tui`, `/usr/local/bin/tunl-helper` and `/etc/sudoers.d/tunl-tui`, which lets
 members of the `elsec-tunl` group run only that helper as root without a password. The helper
 only accepts tunnel names that exist in `/etc/wireguard` and strips private/preshared keys from
 status output.
