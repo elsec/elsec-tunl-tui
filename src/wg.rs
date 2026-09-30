@@ -3,7 +3,7 @@ use std::process::Command;
 
 use anyhow::{bail, Context, Result};
 
-const HELPER: &str = "/usr/local/bin/tunl-helper";
+const DEFAULT_HELPER: &str = "/usr/local/bin/tunl-helper";
 
 #[derive(Debug, Clone, Default)]
 pub struct Iface {
@@ -24,11 +24,14 @@ pub struct Peer {
 
 /// Runs the privileged helper, directly when root, otherwise via non-interactive sudo.
 fn run(args: &[&str]) -> Result<String> {
+    // TUNL_HELPER overrides the helper path, e.g. to run from the repo as root.
+    // Non-root use still goes through sudo, which only permits DEFAULT_HELPER.
+    let helper = std::env::var("TUNL_HELPER").unwrap_or_else(|_| DEFAULT_HELPER.into());
     let is_root = unsafe { libc::geteuid() } == 0;
     let output = if is_root {
-        Command::new(HELPER).args(args).output()
+        Command::new(&helper).args(args).output()
     } else {
-        Command::new("sudo").arg("-n").arg(HELPER).args(args).output()
+        Command::new("sudo").arg("-n").arg(&helper).args(args).output()
     }
     .context("failed to run tunl-helper")?;
 

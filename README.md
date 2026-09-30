@@ -16,6 +16,14 @@ members of the `wireguard` group run only that helper as root without a password
 only accepts tunnel names that exist in `/etc/wireguard` and strips private/preshared keys from
 status output.
 
+## Running without installing
+
+Set `TUNL_HELPER` to use the helper from the repo, running as root:
+
+```sh
+sudo TUNL_HELPER=./helper/tunl-helper ./target/release/tunl-tui
+```
+
 ## Keys
 
 `j`/`k` or arrows move · `enter`/`space` toggle up/down · `r` refresh · `q`/`esc` quit
