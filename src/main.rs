@@ -1,0 +1,55 @@
+mod app;
+mod ui;
+mod wg;
+
+use std::time::Duration;
+
+use anyhow::Result;
+use ratatui::crossterm::event::{self, Event, KeyCode, KeyEventKind};
+use ratatui::DefaultTerminal;
+
+use app::App;
+
+const REFRESH_INTERVAL: Duration = Duration::from_secs(2);
+
+fn main() -> Result<()> {
+    // ratatui::init installs a panic hook that restores the terminal.
+    let mut terminal = ratatui::init();
+    let result = run(&mut terminal);
+    ratatui::restore();
+    result
+}
+
+fn run(terminal: &mut DefaultTerminal) -> Result<()> {
+    let mut app = App::new();
+    loop {
+        terminal.draw(|f| ui::draw(f, &app))?;
+
+        if event::poll(Duration::from_millis(250))? {
+            if let Event::Key(key) = event::read()? {
+                if key.kind != KeyEventKind::Press {
+                    continue;
+                }
+                match key.code {
+                    KeyCode::Char('q') | KeyCode::Esc => return Ok(()),
+                    KeyCode::Char('j') | KeyCode::Down => app.next(),
+                    KeyCode::Char('k') | KeyCode::Up => app.previous(),
+                    KeyCode::Char('r') => app.refresh(),
+                    KeyCode::Enter | KeyCode::Char(' ') => {
+                        if let Some(t) = app.selected() {
+                            let verb = if t.iface.is_some() { "bringing down" } else { "bringing up" };
+                            app.info(format!("{verb} {}…", t.name));
+                            terminal.draw(|f| ui::draw(f, &app))?;
+                            app.toggle();
+                        }
+                    }
+                    _ => {}
+                }
+            }
+        }
+
+        if app.last_refresh.elapsed() >= REFRESH_INTERVAL {
+            app.refresh();
+        }
+    }
+}
