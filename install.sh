@@ -20,9 +20,9 @@ if [[ -n ${SUDO_USER:-} ]]; then
 fi
 
 install -o root -g root -m 0755 target/release/elsec-tunl-tui /usr/local/bin/elsec-tunl-tui
-install -o root -g root -m 0755 helper/elsec-tunl-priv /usr/local/bin/elsec-tunl-priv
+install -o root -g root -m 0755 priv/elsec-tunl-priv /usr/local/bin/elsec-tunl-priv
 
-visudo -cf helper/sudoers
-install -o root -g root -m 0440 helper/sudoers /etc/sudoers.d/elsec-tunl-tui
+visudo -cf priv/sudoers
+install -o root -g root -m 0440 priv/sudoers /etc/sudoers.d/elsec-tunl-tui
 
 echo "Installed. Log out and back in (or run 'newgrp elsec-tunl') for the group to take effect, then run 'elsec-tunl-tui'."

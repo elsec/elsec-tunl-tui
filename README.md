@@ -31,7 +31,7 @@ Removes the binary, helper, sudoers rule and `elsec-tunl` group. Tunnels that ar
 Set `ELSEC_TUNL_PRIV` to use the helper from the repo, running as root:
 
 ```sh
-sudo ELSEC_TUNL_PRIV=./helper/elsec-tunl-priv ./target/release/elsec-tunl-tui
+sudo ELSEC_TUNL_PRIV=./priv/elsec-tunl-priv ./target/release/elsec-tunl-tui
 ```
 
 ## Keys
