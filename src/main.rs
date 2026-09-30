@@ -30,24 +30,22 @@ fn run(terminal: &mut DefaultTerminal) -> Result<()> {
                 if key.kind != KeyEventKind::Press {
                     continue;
                 }
+                if app.popup.is_some() {
+                    app.popup = None;
+                    continue;
+                }
                 match key.code {
                     KeyCode::Char('q') | KeyCode::Esc => return Ok(()),
                     KeyCode::Char('j') | KeyCode::Down => app.next(),
                     KeyCode::Char('k') | KeyCode::Up => app.previous(),
                     KeyCode::Char('r') => app.refresh(),
-                    KeyCode::Enter | KeyCode::Char(' ') => {
-                        if let Some(t) = app.selected() {
-                            let verb = if t.iface.is_some() { "bringing down" } else { "bringing up" };
-                            app.info(format!("{verb} {}…", t.name));
-                            terminal.draw(|f| ui::draw(f, &app))?;
-                            app.toggle();
-                        }
-                    }
+                    KeyCode::Enter | KeyCode::Char(' ') => app.toggle(),
                     _ => {}
                 }
             }
         }
 
+        app.poll_pending();
         if app.last_refresh.elapsed() >= REFRESH_INTERVAL {
             app.refresh();
         }

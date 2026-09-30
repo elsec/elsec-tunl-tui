@@ -1,10 +1,10 @@
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use ratatui::{
-    layout::{Constraint, Layout},
+    layout::{Constraint, Flex, Layout, Rect},
     style::{Color, Modifier, Style, Stylize},
     text::{Line, Span},
-    widgets::{Block, List, ListItem, ListState, Paragraph, Wrap},
+    widgets::{Block, Clear, List, ListItem, ListState, Paragraph, Wrap},
     Frame,
 };
 
@@ -43,6 +43,21 @@ pub fn draw(frame: &mut Frame, app: &App) {
         None => Line::from("j/k move  enter toggle  r refresh  q quit".dark_gray()),
     };
     frame.render_widget(Paragraph::new(footer_line), footer);
+
+    if let Some(text) = &app.popup {
+        let area = centered(frame.area(), 80, 60);
+        let popup = Paragraph::new(text.as_str())
+            .block(Block::bordered().title(" Error ").title_bottom(" any key to close ").red())
+            .wrap(Wrap { trim: false });
+        frame.render_widget(Clear, area);
+        frame.render_widget(popup, area);
+    }
+}
+
+fn centered(area: Rect, percent_x: u16, percent_y: u16) -> Rect {
+    let [area] = Layout::vertical([Constraint::Percentage(percent_y)]).flex(Flex::Center).areas(area);
+    let [area] = Layout::horizontal([Constraint::Percentage(percent_x)]).flex(Flex::Center).areas(area);
+    area
 }
 
 fn detail_lines(app: &App) -> Vec<Line<'_>> {
@@ -70,7 +85,10 @@ fn detail_lines(app: &App) -> Vec<Line<'_>> {
         lines.push(field("peer", peer.public_key.clone()));
         lines.push(field("endpoint", peer.endpoint.clone()));
         lines.push(field("allowed ips", peer.allowed_ips.clone()));
-        lines.push(field("handshake", ago(peer.latest_handshake)));
+        lines.push(Line::from(vec![
+            Span::styled(format!("{:>12}  ", "handshake"), Color::DarkGray),
+            Span::styled(ago(peer.latest_handshake), handshake_color(peer.latest_handshake)),
+        ]));
         lines.push(field("transfer", format!("{} received, {} sent", bytes(peer.rx), bytes(peer.tx))));
     }
     lines
@@ -80,12 +98,28 @@ fn field(label: &str, value: String) -> Line<'static> {
     Line::from(vec![Span::styled(format!("{label:>12}  "), Color::DarkGray), Span::raw(value)])
 }
 
+/// WireGuard re-handshakes about every 2 minutes on an active tunnel, so an older
+/// handshake means the peer is idle or unreachable.
+fn handshake_color(timestamp: u64) -> Color {
+    match timestamp {
+        0 => Color::Red,
+        _ => match now().saturating_sub(timestamp) {
+            0..=180 => Color::Green,
+            181..=600 => Color::Yellow,
+            _ => Color::Red,
+        },
+    }
+}
+
+fn now() -> u64 {
+    SystemTime::now().duration_since(UNIX_EPOCH).map_or(0, |d| d.as_secs())
+}
+
 fn ago(timestamp: u64) -> String {
     if timestamp == 0 {
         return "never".into();
     }
-    let now = SystemTime::now().duration_since(UNIX_EPOCH).map_or(0, |d| d.as_secs());
-    let secs = now.saturating_sub(timestamp);
+    let secs = now().saturating_sub(timestamp);
     match secs {
         0..60 => format!("{secs}s ago"),
         60..3600 => format!("{}m ago", secs / 60),

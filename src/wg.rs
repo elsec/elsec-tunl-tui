@@ -37,8 +37,8 @@ fn run(args: &[&str]) -> Result<String> {
 
     if !output.status.success() {
         let stderr = String::from_utf8_lossy(&output.stderr);
-        let msg = stderr.trim().lines().last().unwrap_or("unknown error");
-        bail!("{}", msg);
+        let msg = stderr.trim();
+        bail!("{}", if msg.is_empty() { "unknown error" } else { msg });
     }
     Ok(String::from_utf8_lossy(&output.stdout).into_owned())
 }
