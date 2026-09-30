@@ -8,8 +8,8 @@ if [[ $EUID -ne 0 ]]; then
   exit 1
 fi
 
-rm -f /etc/sudoers.d/tunl-tui
-rm -f /usr/local/bin/tunl-helper /usr/local/bin/tunl-tui
+rm -f /etc/sudoers.d/elsec-tunl-tui
+rm -f /usr/local/bin/tunl-helper /usr/local/bin/elsec-tunl-tui
 
 if getent group elsec-tunl >/dev/null; then
   groupdel elsec-tunl

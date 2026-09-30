@@ -307,6 +307,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "252afb9ae5eaa683babdc6a068b3f5726eb19e05070c731f9b2a23a7c3e8ed34"
 
 [[package]]
+name = "elsec-tunl-tui"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "libc",
+ "ratatui",
+]
+
+[[package]]
 name = "equivalent"
 version = "1.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1413,15 +1422,6 @@ name = "time-core"
 version = "0.1.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9e1c906769ad99c88eaa54e728060edef082f8e358ff32030cb7c7d315e81109"
-
-[[package]]
-name = "tunl-tui"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "libc",
- "ratatui",
-]
 
 [[package]]
 name = "typenum"
