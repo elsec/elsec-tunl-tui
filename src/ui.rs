@@ -63,7 +63,7 @@ fn centered(area: Rect, percent_x: u16, percent_y: u16) -> Rect {
 fn detail_lines(app: &App) -> Vec<Line<'_>> {
     let Some(tunnel) = app.selected() else {
         let hint = match &app.message {
-            Some(m) if m.is_error => "Could not load tunnels. Is tunl-helper installed? (sudo ./install.sh)",
+            Some(m) if m.is_error => "Could not load tunnels. Is elsec-tunl-priv installed? (sudo ./install.sh)",
             _ => "No tunnels found in /etc/wireguard",
         };
         return vec![Line::from(hint)];

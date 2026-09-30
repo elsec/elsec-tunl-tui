@@ -1,1 +1,1 @@
-%elsec-tunl ALL=(root) NOPASSWD: /usr/local/bin/tunl-helper
+%elsec-tunl ALL=(root) NOPASSWD: /usr/local/bin/elsec-tunl-priv

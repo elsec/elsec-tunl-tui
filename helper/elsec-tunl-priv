@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Root-side helper for elsec-tunl-tui. Installed root:root 0755 at /usr/local/bin/tunl-helper
+# Root-side helper for elsec-tunl-tui. Installed root:root 0755 at /usr/local/bin/elsec-tunl-priv
 # and allowed via sudoers for the `elsec-tunl` group. Only operates on configs in
 # /etc/wireguard by name and never prints private or preshared keys.
 set -euo pipefail
@@ -7,7 +7,7 @@ export PATH=/usr/bin:/usr/sbin
 CONF_DIR=/etc/wireguard
 
 usage() {
-  echo "usage: tunl-helper list | status | up NAME | down NAME" >&2
+  echo "usage: elsec-tunl-priv list | status | up NAME | down NAME" >&2
   exit 2
 }
 
@@ -31,7 +31,7 @@ case "${1:-}" in
     ;;
   up|down)
     [[ $# -eq 2 ]] || usage
-    valid_name "$2" || { echo "tunl-helper: unknown tunnel '$2'" >&2; exit 1; }
+    valid_name "$2" || { echo "elsec-tunl-priv: unknown tunnel '$2'" >&2; exit 1; }
     exec wg-quick "$1" "$2"
     ;;
   *)

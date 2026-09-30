@@ -13,7 +13,7 @@ newgrp elsec-tunl         # or log out/in
 elsec-tunl-tui
 ```
 
-`install.sh` installs `/usr/local/bin/elsec-tunl-tui`, `/usr/local/bin/tunl-helper` and `/etc/sudoers.d/elsec-tunl-tui`, which lets
+`install.sh` installs `/usr/local/bin/elsec-tunl-tui`, `/usr/local/bin/elsec-tunl-priv` and `/etc/sudoers.d/elsec-tunl-tui`, which lets
 members of the `elsec-tunl` group run only that helper as root without a password. The helper
 only accepts tunnel names that exist in `/etc/wireguard` and strips private/preshared keys from
 status output.
@@ -28,10 +28,10 @@ Removes the binary, helper, sudoers rule and `elsec-tunl` group. Tunnels that ar
 
 ## Running without installing
 
-Set `TUNL_HELPER` to use the helper from the repo, running as root:
+Set `ELSEC_TUNL_PRIV` to use the helper from the repo, running as root:
 
 ```sh
-sudo TUNL_HELPER=./helper/tunl-helper ./target/release/elsec-tunl-tui
+sudo ELSEC_TUNL_PRIV=./helper/elsec-tunl-priv ./target/release/elsec-tunl-tui
 ```
 
 ## Keys

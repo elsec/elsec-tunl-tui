@@ -20,7 +20,7 @@ if [[ -n ${SUDO_USER:-} ]]; then
 fi
 
 install -o root -g root -m 0755 target/release/elsec-tunl-tui /usr/local/bin/elsec-tunl-tui
-install -o root -g root -m 0755 helper/tunl-helper /usr/local/bin/tunl-helper
+install -o root -g root -m 0755 helper/elsec-tunl-priv /usr/local/bin/elsec-tunl-priv
 
 visudo -cf helper/sudoers
 install -o root -g root -m 0440 helper/sudoers /etc/sudoers.d/elsec-tunl-tui
