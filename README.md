@@ -2,6 +2,8 @@
 
 A minimal TUI for bringing `wg-quick` tunnels up/down and viewing their status.
 
+![tunl-tui showing a connected tunnel with peer status](docs/screenshot.png)
+
 ## Setup
 
 ```sh
